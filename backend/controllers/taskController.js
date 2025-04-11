@@ -283,6 +283,7 @@ const getDashboardData = async (req, res) => {
         // Fetch Statistics for the dashboard
         const totalTasks = await Task.countDocuments();
         const pendingTasks = await Task.countDocuments({ status: 'Pending' });
+        const inProgressTasks = await Task.countDocuments({ status: 'In Progress' });
         const completedTasks = await Task.countDocuments({ status: 'Completed' });
         const overdueTasks = await Task.countDocuments({ 
             dueDate: { $lt: new Date() }, 
@@ -300,8 +301,8 @@ const getDashboardData = async (req, res) => {
         ]);
 
         const taskDistribution = taskStatuses.reduce((acc, status) => {
-            const formattedKey = status.replace(/\s+/g, '').trim();
-            acc[formattedKey] = taskDistributionRaw.find((item) => item._id === formattedKey)?.count || 0;
+            const formattedKey = status.replace(/\s+/g, '').trim(); // Remove spaces for response keys
+            acc[formattedKey] = taskDistributionRaw.find((item) => item._id === status)?.count || 0;
             return acc;
         }, {});
 
@@ -334,6 +335,7 @@ const getDashboardData = async (req, res) => {
             satisfies: {
                 totalTasks,
                 pendingTasks,
+                inProgressTasks,
                 completedTasks,
                 overdueTasks,
             },
@@ -383,7 +385,7 @@ const getUserDashboardData = async (req, res) => {
 
         const taskDistribution = taskStatuses.reduce((acc, status) => {
             const formattedKey = status.replace(/\s+/g, '').trim();
-            acc[formattedKey] = taskDistributionRaw.find((item) => item._id === formattedKey)?.count || 0;
+            acc[formattedKey] = taskDistributionRaw.find((item) => item._id === status)?.count || 0;
             return acc;
         }, {});
         
