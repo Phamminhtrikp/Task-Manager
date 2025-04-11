@@ -9,6 +9,8 @@ import SelectDropdown from '../../components/Inputs/SelectDropdown';
 import SelectUsers from '../../components/Inputs/SelectUsers';
 import TodoListInput from '../../components/Inputs/TodoListInput';
 import AddAttachmentsInput from '../../components/Inputs/AddAttachmentsInput';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 
 const CreateTask = () => {
 
@@ -53,7 +55,32 @@ const CreateTask = () => {
   };
 
   // Create task
-  const createTask = async () => { };
+  const createTask = async () => {
+    setLoading(true);
+
+    try {
+      const todoList = (taskData.todoCheckList || []).map((item) => ({
+        text: item,
+        completed: false,
+      }));
+
+      const response = await axiosInstance.post(API_PATHS.TASKS.CREATE_TASK, {
+        ...taskData,
+        dueDate: new Date(taskData.dueDate).toISOString(),
+        todoCheckList: todoList,
+      });
+
+      toast.success("Task Created Successfully!");
+
+      clearData();
+
+    } catch (error) {
+      console.error("Error creating task!", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Update Task
   const updateTask = async () => { };
@@ -100,7 +127,6 @@ const CreateTask = () => {
     createTask();
   }
 
-  console.log("ERR >> ", error)
 
   return (
     <DashboardLayout activeMenu={"Create Task"}>
