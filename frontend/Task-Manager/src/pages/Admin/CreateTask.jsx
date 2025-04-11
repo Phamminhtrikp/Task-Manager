@@ -68,7 +68,36 @@ const CreateTask = () => {
 
   // Handle Submit
   const handleSubmit = async () => {
-    
+    setError(null);
+
+    // Input validation
+    if(!taskData.title.trim()) {
+      setError("Title is Required!");
+      return;
+    }
+    if(!taskData.description.trim()) {
+      setError("Description is Required!");
+      return;
+    }
+    if(!taskData.dueDate) {
+      setError("Due Date is Required!");
+      return;
+    }
+    if(taskData.assignedTo?.length === 0) {
+      setError("Task not assigned to any member!");
+      return;
+    }
+    if(taskData.todoCheckList?.length === 0) {
+      setError("Add at least one todo task!");
+      return;
+    }
+
+    if(taskId) {
+      updateTask();
+      return;
+    }
+
+    createTask();
   }
 
   console.log("ERR >> ", error)
