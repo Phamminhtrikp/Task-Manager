@@ -71,8 +71,26 @@ const ManageTasks = () => {
             </button>
           </div>
 
-          
+          {tabs?.[0]?.count > 0 && (
+            <div className="flex items-center gap-3">
+              <TaskStatusTabs
+                tabs={tabs}
+                activeTab={filterStatus}
+                setActiveTab={setFilterStatus}
+              />
+
+              <button
+                className="hidden lg:flex group download-btn"
+                onClick={handleDownloadReport}
+              >
+                <LuCircleArrowDown className="text-lg group-hover:animate-bounce" />
+                Download Report
+              </button>
+            </div>
+          )}
         </div>
+
+        
       </div>
     </DashboardLayout>
   )
