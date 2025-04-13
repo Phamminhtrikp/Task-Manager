@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation, useNavigate } from 'react-router';
 import moment from 'moment';
@@ -86,7 +86,32 @@ const CreateTask = () => {
   const updateTask = async () => { };
 
   // get Task info by id
-  const getTaskDetailsByID = async () => { };
+  const getTaskDetailsByID = async () => {
+
+    try {
+      const response = await axiosInstance.get(
+        API_PATHS.TASKS.GET_TASK_BY_ID(taskId)
+      );
+
+      if (response.data) {
+        const taskInfo = response.data;
+
+        setCurrentTask(taskInfo);
+
+        setTaskData((prevState) => ({
+          title: taskInfo.title,
+          description: taskInfo.description,
+          priority: taskInfo.priority,
+          dueDate: taskInfo.dueDate ? moment(taskInfo.dueDate).format("YYYY-MM-DD") : null,
+          assignedTo: taskInfo?.assignedTo?.map((item) => item?._id) || [],
+          todoCheckList: taskInfo?.todoCheckList?.map((item) => item?.text) || [],
+          attachments: taskInfo?.attachments || [],
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching data!", error);
+    }
+  };
 
   // Delete task
   const deleteTask = async () => {
@@ -98,28 +123,28 @@ const CreateTask = () => {
     setError(null);
 
     // Input validation
-    if(!taskData.title.trim()) {
+    if (!taskData.title.trim()) {
       setError("Title is Required!");
       return;
     }
-    if(!taskData.description.trim()) {
+    if (!taskData.description.trim()) {
       setError("Description is Required!");
       return;
     }
-    if(!taskData.dueDate) {
+    if (!taskData.dueDate) {
       setError("Due Date is Required!");
       return;
     }
-    if(taskData.assignedTo?.length === 0) {
+    if (taskData.assignedTo?.length === 0) {
       setError("Task not assigned to any member!");
       return;
     }
-    if(taskData.todoCheckList?.length === 0) {
+    if (taskData.todoCheckList?.length === 0) {
       setError("Add at least one todo task!");
       return;
     }
 
-    if(taskId) {
+    if (taskId) {
       updateTask();
       return;
     }
@@ -127,6 +152,14 @@ const CreateTask = () => {
     createTask();
   }
 
+  useEffect(() => {
+
+    if (taskId) {
+      getTaskDetailsByID(taskId);
+    }
+
+    return () => { };
+  }, [taskId]);
 
   return (
     <DashboardLayout activeMenu={"Create Task"}>
@@ -140,7 +173,7 @@ const CreateTask = () => {
 
               {taskId && (
                 <button
-                  className="flex items-center gap-1.5 textx-[13px] font-medium text-rose-500 bg-rose-50 border border-rose-100 hover:border-rose-300 cursor-pointer"
+                  className="flex items-center gap-1.5 px-2 rounded-md textx-[13px] font-medium text-rose-500 bg-rose-50 border border-rose-100 hover:border-rose-300 cursor-pointer"
                   onClick={() => setOpenDeleteAlert(true)}
                 >
                   <LuTrash2 className="text-base" /> Delete
