@@ -67,17 +67,16 @@ const exportTasksReport = async (req, res) => {
  */
 const exportUsersReport = async (req, res) => {
     try {
-        const  users = await User.find().select('name email _id createdAt').lean();
-        const userTasks = await Task.find({}).populate('assignedTo', 'name email _id createdAt');
+        const  users = await User.find().select('name email _id').lean();
+        const userTasks = await Task.find().populate('assignedTo', 'name email _id');
 
         const userTaskMap = {};
         users.forEach((user) => {
             userTaskMap[user._id] = {
                 name: user.name,
                 email: user.email,
-                createdAt: new Date(user.createdAt).toLocaleDateString(),
                 taskCount: 0,
-                pedingTasks: 0,
+                pendingTasks: 0,
                 inProgressTasks: 0,
                 completedTasks: 0,
             };
@@ -103,11 +102,9 @@ const exportUsersReport = async (req, res) => {
         const workbook = new excelJS.Workbook();
         const worksheet = workbook.addWorksheet('Users Report');
 
-        const columns = [
-            { header: 'User ID', key: 'userId', width: 25 },
+        worksheet.columns = [
             { header: 'Name', key: 'name', width: 30 },
             { header: 'Email', key: 'email', width: 40 },
-            { header: 'Created At', key: 'createdAt', width: 20 },
             { header: 'Total Assigned Tasks', key: 'taskCount', width: 20 },
             { header: 'Pending Tasks', key: 'pendingTasks', width: 20 },
             { header: 'In Progress Tasks', key: 'inProgressTasks', width: 20 },
@@ -124,7 +121,7 @@ const exportUsersReport = async (req, res) => {
         );
         res.setHeader(
             'Content-Disposition', 
-            'attachment; filename=users_report.xlsx'
+            'attachment; filename="users_report.xlsx"'
         );
 
         return workbook.xlsx.write(res).then(() => {
