@@ -83,7 +83,34 @@ const CreateTask = () => {
   };
 
   // Update Task
-  const updateTask = async () => { };
+  const updateTask = async () => {
+    setLoading(true);
+
+    try {
+      const todoList = taskData.todoCheckList?.map((item) => {
+        const prevTodoCheckList = currentTask?.todoCheckList || [];
+        const matchedTasks = prevTodoCheckList.find((task) => task.text === item);
+
+        return {
+          text: item,
+          completed: matchedTasks ? matchedTasks.completed : false,
+        };
+      });
+
+      const response = await axiosInstance.put(API_PATHS.TASKS.UPDATE_TASK(taskId), {
+        ...taskData,
+        dueDate: new Date(taskData.dueDate).toISOString(),
+        todoCheckList: todoList,
+      });
+
+      toast.success("Update Task Successfully!");
+    } catch (error) {
+      console.error("Error update task:", error);
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // get Task info by id
   const getTaskDetailsByID = async () => {
