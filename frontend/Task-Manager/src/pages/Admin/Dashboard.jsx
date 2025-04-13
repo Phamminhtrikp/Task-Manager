@@ -11,7 +11,7 @@ import { addThounsandsSeparator } from '../../utils/helper';
 import { LuArrowRight } from 'react-icons/lu';
 import TaskListTable from '../../components/TaskListTable';
 import CustomPieChart from '../../components/Charts/CustomPieChart';
-import CustomBarChart from './CustomBarChart';
+import CustomBarChart from '../../components/Charts/CustomBarChart';
 
 
 const COLORS = ["#8d51ff", "#00B8DB", "#00c951"]; // #7bce00
