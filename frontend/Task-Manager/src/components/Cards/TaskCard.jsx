@@ -15,7 +15,7 @@ const TaskCard = (
         dueDate,
         assignedTo,
         attachmentCount,
-        completedTodCount,
+        completedTodoCount,
         todoCheckList,
         onClick
     }
@@ -89,7 +89,7 @@ const TaskCard = (
                     <span
                         className="font-semibold text-gray-700"
                     >
-                        {completedTodCount} / {todoCheckList.length || 0}
+                        {completedTodoCount} / {todoCheckList.length || 0}
                     </span>
                 </p>
 

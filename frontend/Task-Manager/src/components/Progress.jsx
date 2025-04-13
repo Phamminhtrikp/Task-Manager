@@ -4,15 +4,15 @@ const Progress = ({ progress, status }) => {
     const getColor = () => {
         switch (status) {
             case "In Progress":
-                return "text-cyan-500 bg-cyan-50 border border-cyan-500/10";
+                return "text-cyan-500 bg-cyan-500 border border-cyan-500/10";
                 break;
 
             case "Completed":
-                return "text-indigo-500 bg-indigo-50 border border-indigo-500/10";
+                return "text-indigo-500 bg-indigo-500 border border-indigo-500/10";
                 break;
 
             default:
-                return "text-violet-500 bg-violet-50 border border-violet-500/10"
+                return "text-violet-500 bg-violet-500 border border-violet-500/10"
                 break;
         }
     }
