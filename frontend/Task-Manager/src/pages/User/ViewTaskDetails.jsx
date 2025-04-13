@@ -44,11 +44,33 @@ const ViewTaskDetails = () => {
   };
 
   // Handle todo Check
-  const updateTodoCheckList = async () => { };
+  const updateTodoCheckList = async (index) => {
+    const todoCheckList = [...task?.todoCheckList];
+    const taskId = id;
+
+    if (todoCheckList && todoCheckList[index]) {
+      todoCheckList[index].completed = !todoCheckList[index].completed;
+
+      try {
+        const response = await axiosInstance.put(API_PATHS.TASKS.UPDATE_TODO_CHECKLIST(taskId), {
+          todoCheckList
+        });
+
+        if (response.status === 200) {
+          setTask(response.data?.task || task);
+        } else {
+          // Optionally revert the toggle if the API call fails.
+          todoCheckList[index].completed = !todoCheckList[index].completed;
+        }
+      } catch (error) {
+        todoCheckList[index].completed = !todoCheckList[index].completed;
+      }
+    }
+  };
 
   // Handle attachments link click
   const handleLinkClick = (link) => {
-    if(!/^https?:\/\//i.test(link)) {
+    if (!/^https?:\/\//i.test(link)) {
       link = "https://" + link; // Default to https
     }
     window.open(link, "_blank");
@@ -129,7 +151,7 @@ const ViewTaskDetails = () => {
                   <label className="text-xs font-medium text-slate-500">Attachments</label>
 
                   {task?.attachments?.map((link, index) => (
-                    <Attachment 
+                    <Attachment
                       key={`link_${index}`}
                       link={link}
                       index={index}
