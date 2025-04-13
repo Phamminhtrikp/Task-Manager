@@ -68,7 +68,7 @@ const TaskListTable = ({ tableData }) => {
                                 >{task.priority}</span>
                             </td>
                             <td 
-                                className="px-4 py-4 text-gray-700 text-[13px] text-nowrap hidden md:table-cell"
+                                className="px-4 py-4 text-gray-700 text-[13px] text-nowrap md:table-cell"
                             >
                                 {task.createdAt ? moment(task.createdAt).format('Do MMM YYYY') : 'N/A'}
                             </td>
