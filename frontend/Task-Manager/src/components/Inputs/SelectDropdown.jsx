@@ -6,7 +6,7 @@ const SelectDropdown = ({ options, value, onChange, placeholder }) => {
 
     const handleSelect = (option) => {
         onChange(option);
-        setIsOpen(true);
+        setIsOpen(false);
     }
 
 
